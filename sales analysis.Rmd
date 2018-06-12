@@ -1,0 +1,130 @@
+
+
+
+```{r}
+#Initiating the librariers that we will need
+library(tidyverse)
+library(readxl)
+
+# Read the Data
+setwd("/Users/jimmy/AnacondaProjects/Data602/Group Project")
+Sales = read_excel(path = "Product Sales.xlsx", sheet ="Sales")
+```
+```{r}
+head(Sales)
+
+
+```
+
+
+
+```{r}
+# First we can check out the geographic distrubtions of the companies
+
+library(ggplot2)
+ggplot(Sales, aes(x=CompanyWorldRegion))+geom_bar()
+
+
+# Next lets dive deeper into the region and check out revenues 
+
+
+library(dplyr)
+region <- Sales %>%
+  group_by(CompanyWorldRegion) %>%
+  summarise(mean_total_revenue=mean(AddInRevenue),
+            median_total_revenue=median(AddInRevenue),
+            n=n()) %>%
+  ungroup() %>% 
+  arrange(CompanyWorldRegion)
+
+
+
+ggplot(region, aes(x=CompanyWorldRegion, y=mean_total_revenue))+geom_point() +scale_y_log10()
+
+
+head(region)
+
+
+```
+
+
+
+```{r}
+#PCA
+# to conduct PCA we need all of our features to be of the numeric data type
+
+library(dummies)
+cols <- c('CustomerID', 'CompanySize','ExcelAddInItemsSold','ExcelAddInItemsSold','AddInSalesTransactions','TransactionsAutoPay','TransactionsManualPay','AnalyticsSoftwareRevenue' )
+newdata <- Sales[cols]
+
+# just checking to make sure it looks good
+str(cols)
+
+# generating the PCA
+prin_comp <- prcomp(newdata, scale. = T)
+
+summary(prin_comp)
+biplot(prin_comp, scale = 0)
+
+std_dev <- prin_comp$sdev
+pr_var <- std_dev^2
+prop_varex <- pr_var/sum(pr_var)
+
+# visualizing the PCA
+plot(prop_varex, xlab = "Principal Component",
+             ylab = "Proportion of Variance Explained",
+             type = "b")
+             
+             
+plot(cumsum(prop_varex), xlab = "Principal Component",
+              ylab = "Cumulative Proportion of Variance Explained",
+              type = "b")             
+             
+             
+```
+
+
+`
+
+
+
+#### I could not get a confusion matrix to generate, I tried so many different things from online/stack overflow. I think it has something to do with factor levels being wrong... but I dont know!!!!!!!!
+
+res = neuralnet::compute(NeuralFit, m[,c("pct_loan_income","dti")])
+pred_train = round(res$net.result)
+
+library(dplyr)
+library(caret)
+pred_rowid <- as.numeric(row.names(pred_train))
+train_loan <- train %>% filter(row_number(loan_default) %in% pred_rowid) %>% select(loan_default)
+confusionMatrix(as.factor(train_loan$loan_default), as.factor(pred_train))
+
+confusionMatrix(
+    factor(train_survived$loan_default, levels=1:148),
+    factor(pred_train, levels=1:148)
+)
+
+
+
+
+Prediction2 <- prediction(NeuralFit, datatest)
+
+
+table(Prediction2,test$loan_default,drop=F)
+
+library(caret)
+confusionMatrix(as.factor(NeuralPredict), as.factor(LendingClub$loan_default)
+
+NeuralFit$result.matrix
+NeuralFit$
+  
+  
+  
+  
+  
+  
+  
+  
+```
+
+
